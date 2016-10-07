@@ -6,6 +6,7 @@ activeLangs = require '../../active_langs'
 count = 0
 args = process.argv.slice(2)
 total = args.length
+{ green, blue } = require 'chalk'
 
 i18nSrcActive = activeLangs
 i18nTransifexActive = activeFiles './server/lib/emails/i18n/src/transifex'
@@ -45,12 +46,11 @@ module.exports =
       json_.write(i18nSrc(lang), update)
       json_.write(i18nArchive(lang), archive)
     ]
-    .then -> console.log "#{lang} src updated!".blue
+    .then -> console.log blue("#{lang} src updated!")
     .catch (err)->
       console.log "couldnt update #{lang} src files", err.stack
       throw err
 
   writeDistVersion: (lang, dist)->
     json_.write __.path('i18nDist', "#{lang}.json"), dist
-    .then ->
-      console.log "#{lang} done! total: #{++count}".green
+    .then -> console.log green("#{lang} done! total: #{++count}")

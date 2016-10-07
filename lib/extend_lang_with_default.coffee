@@ -1,6 +1,7 @@
 _ = require 'lodash'
 Promise = require 'bluebird'
 findKeys = require './find_keys'
+{ red } = require 'chalk'
 { getSources, updateAndArchive, writeDistVersion } = require './json_files_handlers'
 
 module.exports = extendLangWithDefault = (lang)->
@@ -17,5 +18,5 @@ module.exports = extendLangWithDefault = (lang)->
     writeDistVersion lang, dist
 
   .catch (err)->
-    console.error "#{lang} err".red, err.stack
+    console.error red("#{lang} err"), err.stack
     throw err

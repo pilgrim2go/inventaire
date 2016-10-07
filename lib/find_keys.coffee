@@ -5,6 +5,7 @@ _ = require 'lodash'
 
 linkify = __.require 'client', 'app/lib/handlebars_helpers/linkify'
 convertMarkdown = require('./convert_markdown')(linkify)
+{ green } = require 'chalk'
 
 module.exports = findKeys = (params)->
   { enObj, langCurrent, langTransifex, langArchive, langExtra, markdown, lang } = params
@@ -40,7 +41,7 @@ module.exports = findKeys = (params)->
       if hasExtra
         extraVal = langExtra[k]
         if extraVal?
-          # console.log "importing extra val: #{k}".green, extraVal
+          # console.log green("importing extra val: #{k}"), extraVal
           dist[k] = extraVal
           # Do not set update[k] = null for non-English langs as extra values should not appear
           # in their source files given extra values are meant to avoid dupplicates between projects.

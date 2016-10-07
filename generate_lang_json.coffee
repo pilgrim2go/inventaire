@@ -6,8 +6,8 @@
 
 # Command: cd ~/inventaire && ./server/lib/emails/i18n/src/generate_lang_json.coffee all
 
-require 'colors'
-console.time 'total'.grey
+{ red, grey } = require 'chalk'
+console.time grey('total')
 require('./lib/validate_cwd') process.cwd()
 Promise = require 'bluebird'
 extendLangWithDefault = require './lib/extend_lang_with_default'
@@ -15,10 +15,10 @@ extendLangWithDefault = require './lib/extend_lang_with_default'
 args = process.argv.slice(2)
 langs = require('./lib/validate_lang') args
 
-console.time 'generate'.grey
+console.time grey('generate')
 
 Promise.all langs.map(extendLangWithDefault)
 .then ->
-  console.timeEnd 'generate'.grey
-  console.timeEnd 'total'.grey
-.catch (err)-> console.log 'global err'.red, err.stack
+  console.timeEnd grey('generate')
+  console.timeEnd grey('total')
+.catch (err)-> console.log red('global err'), err.stack
