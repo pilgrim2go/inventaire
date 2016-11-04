@@ -39,7 +39,7 @@
     "update_on_your_item_subject": "Nogle nyheder fra %{username} vedrørende din bog [%{title}](%{link})",
     "cancelled": null,
     "did_you_know_1": "Hvis dine venner ikke er på Inventaire.io, så kan du [invitere dem via email](https://inventaire.io/network/users/invite) for at begynde at dele din bøger.",
-    "did_you_know_4": "Brug af et pseudonym er helt fint på inventaire.io, men hvis du vil have folk til at finde dig, eller hvis du ønsker at invitere andre brugere til at blive venner, [sørg for at have et profilbillede eller en biografi] (https: // Inventaire .io /me), så  de kan genkende dig",
+    "did_you_know_4": "Brug af et pseudonym er helt fint på inventaire.io, men hvis du vil have folk til at finde dig, eller hvis du ønsker at invitere andre brugere til at blive venner, [sørg for at have et profilbillede eller en biografi] (https://inventaire.io/me), så  de kan genkende dig",
     "friendship_request_subject": "%{username} inviterer dig til at forbinde jeres inventarer!",
     "you_are_welcome_to_reply": "**Du er meget velkommen til at svare på denne mail** med spørgsmål og tilbagemeldinger.",
     "activity summary": "aktivitetsoversigt",
