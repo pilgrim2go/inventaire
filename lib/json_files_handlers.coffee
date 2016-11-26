@@ -21,35 +21,21 @@ i18nTransifex = (lang)->
   if lang in i18nTransifexActive then __.path('i18nTransifex', "#{lang}.json")
   else null
 
-i18nArchive = (lang)->
-  if lang in i18nArchiveActive then __.path('i18nArchive', "#{lang}.json")
-  else null
-
 i18nClientDist = (lang)->
   if lang in i18nClientDistActive then __.path('i18nClientDist', "#{lang}.json")
   else null
 
+createIfMissing = false
+
 module.exports =
   getSources: (lang)->
-    enObj: json_.read i18nSrc('en')
-    langCurrent: json_.read i18nSrc(lang)
-    langTransifex: json_.read i18nTransifex(lang)
-    langArchive: json_.read i18nArchive(lang)
+    enObj: json_.read i18nSrc('en'), createIfMissing
+    langTransifex: json_.read i18nTransifex(lang), createIfMissing
     # use the client key/values has extra inputs to avoid having dupplicates
     # between the client and the server projects
-    langExtra: json_.read i18nClientDist(lang)
+    langExtra: json_.read i18nClientDist(lang), createIfMissing
     markdown: true
     lang: lang
-
-  updateAndArchive: (lang, update, archive)->
-    Promise.all [
-      json_.write(i18nSrc(lang), update)
-      json_.write(i18nArchive(lang), archive)
-    ]
-    .then -> console.log blue("#{lang} src updated!")
-    .catch (err)->
-      console.log "couldnt update #{lang} src files", err.stack
-      throw err
 
   writeDistVersion: (lang, dist)->
     json_.write __.path('i18nDist', "#{lang}.json"), dist
