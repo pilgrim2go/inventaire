@@ -15,7 +15,7 @@
     "stop_email_notifications": "[changer les préférences de notifications par email](https://inventaire.io/settings/notifications)",
     "email_invitation_message": "message de **%{username}** :",
     "news_3": "La dernière fois, nous vous présentions la possibilité de voir [les utilisateurs s'étant geolocalisés](https://inventaire.io/network/users/nearby); maintenant vous pouvez également trouver les [groupes près de chez vous](https://inventaire.io/network/groups/nearby) ! Si vous avez déjà créé un groupe et souhaitez le voir apparaître sur la carte, rendez-vous dans les [réglages de votre groupe](https://inventaire.io/network/groups/user). Sinon, il est toujours possible de [créer un groupe](https://inventaire.io/network/groups/create). Les groupes sont pensés pour regrouper des personnes se retrouvant régulièrement dans un même lieu - un bureau, un coworking, une université, etc. - mais si vous les utilisez dans un autre contexte et qu'il vous manque une fonctionnalité, dites-le nous !",
-    "did you know?": "le saviez-vous ?",
+    "did you know?": "astuces",
     "pending_group_requests_count": "il y a **%{smart_count}** [demande en attente pour rejoindre un groupe dont vous êtes admin](%{href}) |||| il y a **%{smart_count}** [demandes en attente pour rejoindre un groupe dont vous êtes admin](%{href})",
     "go_to_user_inventory": "aller à l'inventaire de %{username}",
     "reset_password_button": "Réinitialisez votre mot de passe",
