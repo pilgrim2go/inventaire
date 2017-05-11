@@ -4,7 +4,7 @@ __ = require('config').universalPath
 _ = __.require 'builders', 'utils'
 promises_ = __.require 'lib', 'promises'
 { host } = CONFIG.elasticsearch
-{ indexesList } = __.require 'db', 'elasticsearch/list'
+{ indexesNameList } = __.require 'db', 'elasticsearch/list'
 createIndex = require './create_index'
 
 reset = (dbName)->
@@ -21,4 +21,4 @@ ignoreMissing = (url)-> (err)->
   else
     throw err
 
-indexesList.forEach reset
+indexesNameList.forEach reset

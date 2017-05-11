@@ -51,7 +51,11 @@ couchInit()
     fs.writeFile "./run/#{CONFIG.port}", process.pid
     console.timeEnd 'startup'
 
-.catch _.Error('init err')
+    # Just need to be initialized after the database initialized
+    # and running after the server started to let it execution priority
+    __.require('lib', 'emails/mailer')()
+    __.require('controllers', 'entities/lib/follow')()
+    __.require('controllers', 'users/lib/follow')()
+    __.require('controllers', 'groups/lib/follow')()
 
-__.require('lib', 'emails/mailer')()
-__.require('scripts', 'couch2elastic4sync/exec')('sync')
+.catch _.Error('init err')

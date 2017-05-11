@@ -1,16 +1,13 @@
 CONFIG = require 'config'
 __ = CONFIG.universalPath
-_ = __.require 'builders', 'utils'
 
 # Using CouchDB database names + environment suffix as indexes names
-syncDataList = [
-  { dbBaseName: 'entities', type: 'entity' }
-  { dbBaseName: 'users', type: 'user' }
-  { dbBaseName: 'groups', type: 'group' }
-].map (data)->
-  data.dbName = CONFIG.db.name data.dbBaseName
-  return data
+indexesBaseNameList = [
+  'entities'
+  'users'
+  'groups'
+]
 
-indexesList = syncDataList.map _.property('dbName')
+indexesNameList = indexesBaseNameList.map (name)-> CONFIG.db.name name
 
-module.exports = { syncDataList, indexesList }
+module.exports = { indexesNameList }

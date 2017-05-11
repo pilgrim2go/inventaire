@@ -35,7 +35,7 @@ error_.notFound = (context)->
   return err
 
 error_.catchNotFound = (err)->
-  if err?.notFound then return
+  if err.notFound or err.statusCode is 404 then return
   else throw err
 
 _.extend error_, require('./pre_filled')(error_)

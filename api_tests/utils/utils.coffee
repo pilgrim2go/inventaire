@@ -63,6 +63,16 @@ adminReq = (args...)->
   waitForAdminRights
   .then -> _adminReq.apply null, args
 
+userData = ->
+  username: 'customuser' + randomString(2)
+  password: 'testpassword'
+  email: "#{randomString(2)}@inventaire.io"
+
+customUser = ->
+  customUserReq = AuthentifiedRequest getUserCookies(userData())
+  getCustomUser = GetUser customUserReq
+  return { customUserReq, getCustomUser }
+
 module.exports =
   authReq: authentifiedRequest
   nonAuthReq: request
@@ -70,6 +80,7 @@ module.exports =
   getUser: GetUser authentifiedRequest
   getUserB: GetUser bUserAuthentifiedRequest
   getAdminUser: getAdminUser
+  customUser: customUser
   # A function to quickly fail when a test gets an undesired positive answer
   undesiredRes: (done)-> (res)->
     done new Error(".then function was expected not to be called")

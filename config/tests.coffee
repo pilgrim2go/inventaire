@@ -13,6 +13,7 @@ module.exports =
     suffix: 'tests'
     # debug: true
     follow:
+      # Follow is always reset as tests run LevelDB in memory thank to level-test
       reset: true
       freeze: false
       # Give 1000 delay so that tests relying on follow don't have to wait

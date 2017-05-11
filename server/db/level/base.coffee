@@ -8,6 +8,7 @@ DBPath = __.path 'leveldb'
 
 sublevel = require 'level-sublevel'
 if CONFIG.env is 'tests'
+  # Run level in memory to be sure all cache is deleted
   level = require('level-test')()
   DB = sublevel level()
 else

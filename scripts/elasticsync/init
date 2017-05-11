@@ -1,0 +1,6 @@
+#!/usr/bin/env coffee
+CONFIG = require 'config'
+__ = CONFIG.universalPath
+{ indexesNameList } = __.require 'db', 'elasticsearch/list'
+createIndex = require './create_index'
+indexesNameList.forEach createIndex

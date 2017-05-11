@@ -41,7 +41,9 @@ module.exports =
       return error_.bundleInvalid req, res, 'search', search
 
     searchByText search
-    .filter searchable
+    # No need to filter searchable, as non-searchable groups
+    # aren't indexed in ElasticSearch
+    # cf controllers/groups/lib/follow.coffee
     .then _.Wrap(res, 'groups')
     .catch error_.Handler(req, res)
 

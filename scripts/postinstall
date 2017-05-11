@@ -16,10 +16,6 @@ mkdir -p ./server/lib/emails/i18n/dist
 
 # Expected by scripts/archive_logs
 mkdir -p ./logs
-# Expected by scripts/couch2elastic4sync/exec.coffee
-mkdir -p ./logs/couch2elastic4sync
-# Expected by scripts/couch2elastic4sync/init
-mkdir -p scripts/couch2elastic4sync/configs
 touch ./logs/server.log ./logs/error.log
 # Expected by scripts/actions/backup_databases.coffee
 mkdir -p ./db/couchdb/backups
@@ -27,8 +23,8 @@ mkdir -p ./db/couchdb/backups
 mkdir -p run
 touch run/3006 run/3009
 
-# Synchronize CouchDB and ElasticSearch databases
-npm run couch2elastic4sync:init && npm run couch2elastic4sync:load
+# Init CouchDB and ElasticSearch databases synchronize
+npm run elasticsync:init
 
 # Create a local config file
 emptyConfigFile="
