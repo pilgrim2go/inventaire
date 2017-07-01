@@ -8,10 +8,6 @@
     "friendship_request_subject": "%{username} invites you to connect your inventories!",
     "friendship_request_button": "go to %{username}'s inventory to accept the invitation",
     "you_are_welcome_to_reply": "**you are very welcome to reply to this email** for any question or feedback",
-    "Follow Inventaire development": "Follow Inventaire development",
-    "get_involved": "Do you think you can contribute and make Inventaire better? Get involved!",
-    "contribution_ideas": "Ask to be added to the [project development board](https://trello.com/b/0lKcsZDj/inventaire-community), join the [translation team](https://www.transifex.com/organization/inventaire/), post an [issue on github](https://github.com/inventaire/inventaire/issues), or simply start a discussion by answering this email!",
-    "next_features_title": "Next features to be developed:",
     "stop_email_notifications": "[change emails settings](https://inventaire.io/settings/notifications). For any problem or question, send an email at: [help@inventaire.io](mailto:help@inventaire.io?subject=Help!&body=Dear%20Inventaire%2C%5Cn%20I%20need%20your%20help%3A)",
     "reset_password_subject": "Reset your Inventaire password",
     "reset_password_title": "Forgot your Inventaire password?",
@@ -71,7 +67,6 @@
     "selling_personalized_strong": null,
     "inventorying_personalized_strong": null,
     "km_away": null,
-    "Organize inventories with tags": "Organize inventories with tags",
     "last_nearby_books": "new books in nearby people inventories",
     "last_nearby_books_more": "...and [%{smart_count} more](https://inventaire.io/inventory/nearby)",
     "user_news": "Hello %{username}!"
