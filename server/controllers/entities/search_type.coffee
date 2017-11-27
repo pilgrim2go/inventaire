@@ -10,7 +10,7 @@ _ = __.require 'builders', 'utils'
 error_ = __.require 'lib', 'error/error'
 searchType = require './lib/search_type'
 
-indexedTypes = [ 'works', 'humans', 'series', 'genres', 'movements', 'publishers', 'collections']
+indexedTypes = [ 'works', 'humans', 'series', 'genres', 'movements', 'publishers', 'collections' ]
 
 module.exports = (req, res)->
   { type, search, limit } = req.query
@@ -34,5 +34,14 @@ module.exports = (req, res)->
   limit = _.stringToInt limit
 
   searchType search, type, limit
+  .map addUri
   .then res.json.bind(res)
   .catch error_.Handler(req, res)
+
+# All search results should soon have a URI
+# see https://github.com/inventaire/wikidata-subset-search-engine/blob/d778475/lib/format_entity.coffee#L16
+# but in the meantime, we need to had them manually
+addUri = (result)->
+  # Only Wikidata entities miss their URI
+  result.uri or= "wd:#{result.id}"
+  return result
