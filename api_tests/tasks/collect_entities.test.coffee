@@ -4,11 +4,12 @@ _ = __.require 'builders', 'utils'
 should = require 'should'
 randomString = __.require 'lib', './utils/random_string'
 
-collectEntities = '/api/tasks?action=collect-entities'
 byScore = '/api/tasks?action=by-score&limit=1000'
 
-{ authReq, undesiredErr } = __.require 'apiTests', 'utils/utils'
+{ authReq, adminReq, undesiredErr } = __.require 'apiTests', 'utils/utils'
 { createHuman } = require '../fixtures/entities'
+
+collectEntities = -> adminReq 'post', '/api/tasks?action=collect-entities'
 
 describe 'tasks:collect-entities', ->
   it 'should create new tasks', (done)->
@@ -16,7 +17,7 @@ describe 'tasks:collect-entities', ->
     .then (suspect)->
       suspectId = suspect._id
 
-      authReq 'post', collectEntities
+      collectEntities()
       .then -> authReq 'get', byScore
       .then (res)->
         { tasks } = res
@@ -33,7 +34,7 @@ describe 'tasks:collect-entities', ->
     return
 
   it 'should not re-create existing tasks', (done)->
-    authReq 'post', collectEntities
+    collectEntities()
     .then -> authReq 'get', byScore
     .then (res)->
       { tasks } = res
