@@ -1,11 +1,7 @@
-module.exports = attributes = {}
+module.exports =
+  task:
+    type: [ 'deduplicate' ]
+    state: [ 'merged' ]
 
-attributes.type = [
-  'deduplicate'
-]
-
-attributes.state = [
-  'requested', 'merged', 'dismissed'
-]
-
-attributes.relationScore = []
+  suggestion:
+    state: [ 'dismissed' ]

@@ -38,15 +38,17 @@ validations.BoundedString = (minLength, maxLength)-> (str)->
 validations.imgUrl = (url)-> validations.localImg(url) or _.isUrl(url) or _.isIpfsPath(url)
 
 validations.valid = (attribute, value, option)->
-  test = @[attribute]
+  # Allow nested attributes: ex: attribute='foo.bar'
+  test = _.get @, attribute
   # if no test are set at this attribute for this context
   # default to common validations
   test ?= validations[attribute]
   test value, option
 
-validations.pass = (attribute, value, option)->
+validations.pass = (attribute, value, option = {})->
   unless validations.valid.call @, attribute, value, option
     if _.isObject value then value = JSON.stringify value
+    attribute = option.altName or attribute
     throw error_.newInvalid attribute, value
 
 validations.type = (attribute, typeArgs...)->

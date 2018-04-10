@@ -6,7 +6,7 @@
       "map": "(doc)->\n  emit doc.suspectUri, null"
     },
     "byScore": {
-       "map": "(doc)->\n  if doc.state is 'requested'\n    emit [doc.hasEncyclopediaOccurence, doc.relationScore, doc.elasticScore], doc"
+      "map": "(doc)->\n  bestSuggestion = doc.suggestions[0]\n  if bestSuggestion.state is 'dismissed' then return\n\n  hasEncyclopediaOccurence = if bestSuggestion.hasEncyclopediaOccurence then 1 else 0\n  relationScore = 1 / doc.suggestions.length\n  lexicalScore = bestSuggestion.lexicalScore\n\n  emit [hasEncyclopediaOccurence, relationScore, lexicalScore], null"
     }
   }
 }
