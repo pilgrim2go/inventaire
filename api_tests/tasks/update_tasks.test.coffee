@@ -3,32 +3,30 @@ __ = CONFIG.universalPath
 _ = __.require 'builders', 'utils'
 should = require 'should'
 { authReq, adminReq } = require '../utils/utils'
-{ createTask } = require '../fixtures/tasks'
+{ getAnyNonMergedTask, getBySuspectUris, updateTask } = require '../utils/tasks'
+{ merge: mergeEntities } = require '../utils/entities'
 
 describe 'tasks:update', ->
   it 'should update a task', (done)->
-    createTask()
+    getAnyNonMergedTask()
     .then (task)->
-      task.state.should.equal 'requested'
-      authReq 'put', '/api/tasks?action=update',
-        id: task._id,
-        attribute: 'state',
-        value: 'dismissed'
+      suggestion = task.suggestions[0]
+      suggestion.state.should.equal 'requested'
+      updateTask task._id, suggestion.uri, 'state', 'dismissed'
       .then (updatedTask)->
-        updatedTask[0].ok.should.be.true()
+        updatedTask.ok.should.be.true()
         done()
     .catch done
 
     return
 
   it 'should throw if invalid task id', (done)->
-    createTask()
+    getAnyNonMergedTask()
     .then (task)->
-      task.state.should.equal 'requested'
-      authReq 'put', '/api/tasks?action=update',
-        id: ''
+      suggestion = task.suggestions[0]
+      updateTask '', suggestion.uri, 'state', 'dismissed'
       .catch (err)->
-        err.body.status_verbose.should.be.a.String()
+        err.body.status_verbose.should.equal 'missing parameter in body: id'
         done()
     .catch done
 
@@ -36,35 +34,15 @@ describe 'tasks:update', ->
 
 describe 'tasks:merge-entities', ->
   it 'should update task state from requested to merged', (done) ->
-    createTask()
+    getAnyNonMergedTask()
     .then (task)->
-      adminReq 'put', '/api/entities?action=merge',
-        from: task.suspectUri
-        to: task.suggestionUri
-      .delay 100
-      .then -> authReq 'get', "/api/tasks?action=by-ids&ids=#{task._id}"
+      mergeEntities task.suspectUri, task.suggestions[0].uri
+      .delay 10
+      .then -> getBySuspectUris task.suspectUri
       .then (res)->
         updatedTask = res.tasks[0]
         updatedTask.state.should.equal 'merged'
         done()
     .catch done
-
-    return
-
-  it 'should update all tasks that have same suspectUri to merged', (done) ->
-    createTask()
-    .then (task)->
-      createTask task.suspectUri, 'wd:Q42'
-      .then (anotherTask)->
-        adminReq 'put', '/api/entities?action=merge',
-          from: task.suspectUri
-          to: task.suggestionUri
-        .delay 100
-        .then -> authReq 'get', "/api/tasks?action=by-ids&ids=#{anotherTask._id}"
-        .then (res)->
-          updatedTask = res.tasks[0]
-          updatedTask.state.should.equal 'merged'
-          done()
-      .catch done
 
     return

@@ -3,6 +3,7 @@ __ = CONFIG.universalPath
 _ = __.require 'builders', 'utils'
 promises_ = __.require 'lib', 'promises'
 error_ = __.require 'lib', 'error/error'
+couch_ = __.require 'lib', 'couch'
 Task = __.require 'models', 'task'
 
 db = __.require('couch', 'base')('tasks')
@@ -14,11 +15,15 @@ module.exports = tasks_ =
     .then _.Log('task created')
 
   update: (options)->
-    { ids, attribute, newValue } = options
-    tasks_.byIds ids
-    .map (task)-> Task.update task, attribute, newValue
-    .then db.bulk
+    { id, attribute, value } = options
+    db.update id, (doc)-> Task.update doc, attribute, value
     .then _.Log('tasks updated')
+
+  updateSuggestion: (options)->
+    { id, suggestionUri, attribute, value } = options
+    db.update id, (doc)->
+      Task.updateSuggestion doc, suggestionUri, attribute, value
+    .then _.Log('task suggestion updated')
 
   byId: db.get
 
@@ -32,6 +37,7 @@ module.exports = tasks_ =
 
   bySuspectUri: (suspectUri)->
     db.viewByKey 'bySuspectUri', suspectUri
+    .then couch_.firstDoc
 
   bySuspectUris: (suspectUris)->
     db.viewByKeys 'bySuspectUri', suspectUris
