@@ -16,9 +16,9 @@ defaultEditionData = ->
 
 createEntity = (P31)-> (params = {})->
   labels = params.labels or { en: randomString(6) }
-  authReq 'post', '/api/entities?action=create',
-    labels: labels
-    claims: { 'wdt:P31': [ P31 ] }
+  claims = { 'wdt:P31': [ P31 ] }
+  if params.claims? then _.extend claims, params.claims
+  return authReq 'post', '/api/entities?action=create', { labels, claims }
 
 module.exports = API =
   createHuman: createEntity 'wd:Q5'

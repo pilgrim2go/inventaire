@@ -4,7 +4,6 @@ _ = __.require 'builders', 'utils'
 
 entities_ = __.require 'controllers', 'entities/lib/entities'
 checkEntity = require './check_entity'
-{ calculateRelationScore } = require './relation_score'
 hasWorksLabelsOccurrence = __.require 'controllers', 'entities/lib/has_works_labels_occurrence'
 
 module.exports = (entities)->
@@ -18,38 +17,45 @@ module.exports = (entities)->
       checkEntity entity
       getAuthorWorksData entity._id
     ]
-    .spread (suggestionEntities, authorWorksData)->
-      relationScore = calculateRelationScore(suggestionEntities)
-      Promise.all suggestionEntities.map(createTaskDocs(authorWorksData, relationScore))
-      .then (taskDocs)-> newTasks.push taskDocs...
+    .spread buildTaskDoc
+    .then (newTaskDoc)-> if newTaskDoc? then newTasks.push newTaskDoc
     .then checkNextEntity
 
   return checkNextEntity()
 
-createTaskDocs = (authorWorksData, relationScore)-> (suggestionEntity)->
-  hasWorksLabelsOccurrence(suggestionEntity.uri, authorWorksData.labels, authorWorksData.langs)
-  .then (hasOccurence)->
-    unless suggestionEntity.uri? then return {}
-    return {
-      type: 'deduplicate'
-      suspectUri: "inv:#{authorWorksData.authorId}"
-      suggestionUri: suggestionEntity.uri
-      state: 'requested'
-      lexicalScore: suggestionEntity._score
-      relationScore: relationScore
-      hasEncyclopediaOccurence: hasOccurence
-    }
+buildTaskDoc = (suggestionEntities, authorWorksData)->
+  taskDoc =
+    type: 'deduplicate'
+    suspectUri: "inv:#{authorWorksData.authorId}"
+    suggestions: []
+
+  Promise.all suggestionEntities.map(addSuggestions(taskDoc, authorWorksData))
+  .then -> if taskDoc.suggestions.length > 0 then return taskDoc
+
+addSuggestions = (taskDoc, authorWorksData)-> (suggestionEntity)->
+  { uri, _score: lexicalScore } = suggestionEntity
+  { authorId, labels, langs } = authorWorksData
+
+  unless uri? then return
+
+  hasWorksLabelsOccurrence uri, labels, langs
+  .then (hasEncyclopediaOccurence)->
+    taskDoc.suggestions.push { uri, lexicalScore, hasEncyclopediaOccurence }
+    return
 
 getAuthorWorksData = (authorId)->
   entities_.byClaim 'wdt:P50', "inv:#{authorId}", true, true
   .then (works)->
-    # works = [ { labels: { fr: 'Matiere et Memoire'} }, { labels: { en: 'foo' } } ]
-    worksData = works.reduce aggregateWorksData, { authorId: authorId, labels: [], langs: [] }
+    # works = [
+    #   { labels: { fr: 'Matiere et Memoire'} },
+    #   { labels: { en: 'foo' } }
+    # ]
+    base = { authorId, labels: [], langs: [] }
+    worksData = works.reduce aggregateWorksData, base
     worksData.langs = _.uniq worksData.langs
     return worksData
 
 aggregateWorksData = (worksData, work)->
-  for lang, label of work.labels
-    worksData.labels.push label
-    worksData.langs.push lang
+  worksData.langs.push Object.keys(work.labels)...
+  worksData.labels.push _.values(work.labels)...
   return worksData
