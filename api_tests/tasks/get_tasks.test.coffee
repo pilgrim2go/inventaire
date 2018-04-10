@@ -2,18 +2,14 @@ CONFIG = require 'config'
 __ = CONFIG.universalPath
 _ = __.require 'builders', 'utils'
 should = require 'should'
-
-byScore = '/api/tasks?action=by-score'
-bySuspectUri = '/api/tasks?action=by-suspect-uri&uri='
-{ authReq, undesiredErr } = __.require 'apiTests', 'utils/utils'
-{ createHuman } = require '../fixtures/entities'
-{ createTask } = require '../fixtures/tasks'
+{ undesiredErr } = __.require 'apiTests', 'utils/utils'
+{ collectEntities } = require '../fixtures/tasks'
+{ getByScore, getBySuspectUris } = require '../utils/tasks'
 
 describe 'tasks:byScore', ->
   it 'should returns 10 or less tasks to deduplicates, by default', (done)->
-    createHuman 'Stanislas Lem'
-    .then (res)-> createTask res.uri
-    .then -> authReq 'get', byScore
+    collectEntities()
+    .then getByScore
     .then (res)->
       res.should.be.an.Object()
       { tasks } = res
@@ -25,7 +21,8 @@ describe 'tasks:byScore', ->
     return
 
   it 'should returns a limited array of tasks to deduplicate', (done)->
-    authReq 'get', byScore + '&limit=1'
+    collectEntities()
+    .then -> getByScore { limit: 1 }
     .then (res)->
       res.tasks.length.should.equal 1
       done()
@@ -33,15 +30,17 @@ describe 'tasks:byScore', ->
 
     return
 
-describe 'tasks:bySuspectUri', ->
-  it 'should return an array of tasks', (done)->
-    createTask()
-    .then (task)-> authReq 'get', bySuspectUri + task.suspectUri
-    .then (res)->
-      suspectUris = _.pluck res.tasks, 'suspectUri'
-      suspectUris.should.be.an.Array()
-      _.uniq(suspectUris).length.should.equal 1
-      done()
+describe 'tasks:bySuspectUris', ->
+  it 'should return the task associated with this suspectUri', (done)->
+    collectEntities()
+    .then -> getByScore { limit: 1 }
+    .then (res1)->
+      { suspectUri } = res1.tasks[0]
+      getBySuspectUris suspectUri
+      .then (res2)->
+        res2.tasks[0].should.be.an.Object()
+        res2.tasks[0].suspectUri.should.equal suspectUri
+        done()
     .catch undesiredErr(done)
 
     return
