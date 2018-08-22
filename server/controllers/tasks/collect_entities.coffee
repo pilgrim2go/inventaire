@@ -10,7 +10,7 @@ checkEntity = require './lib/check_entity'
 { interval } = CONFIG.jobs['inv:deduplicate']
 
 module.exports = (req, res)->
-  { refresh } = req.query
+  refresh = _.parseBooleanString req.query.refresh
   addEntitiesToQueue refresh
   .then responses_.Ok(res)
   .catch error_.Handler(req, res)
