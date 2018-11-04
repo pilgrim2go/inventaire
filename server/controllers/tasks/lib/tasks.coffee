@@ -35,5 +35,13 @@ module.exports = tasks_ =
   bySuspectUri: (suspectUri)->
     db.viewByKey 'bySuspectUri', suspectUri
 
-  bySuspectUris: (suspectUris)->
-    db.viewByKeys 'bySuspectUri', suspectUris
+  bySuspectUris: (suspectUris, options = {})->
+    { includeArchived } = options
+    keys = suspectUris.map buildKey(null)
+    if includeArchived?
+      mergedKeys = suspectUris.map buildKey('merged')
+      dissmissedKeys = suspectUris.map buildKey('dismissed')
+      keys = keys.concat mergedKeys, dissmissedKeys
+    db.viewByKeys 'bySuspectUriAndState', keys
+
+buildKey = (state)-> (uri)-> [ uri, state ]
