@@ -6,7 +6,7 @@ error_ = __.require 'lib', 'error/error'
 
 db = __.require('couch', 'base')('comments')
 
-module.exports =
+module.exports = comments_ =
   byId: db.get
 
   byTransactionId: (transactionId)->
@@ -26,17 +26,3 @@ module.exports =
   delete: (comment)->
     comment._deleted = true
     db.put comment
-
-  deleteByItemsIds: (itemsIds)->
-    # You absolutly don't want this id to be undefined
-    # as this would end up deleting the whole database
-    _.types itemsIds, 'strings...'
-    comments_.byItemsIds itemsIds
-    .then db.bulkDelete
-
-  deleteItemsCommentsByUserId: (userId)->
-    # You absolutly don't want this id to be undefined
-    # as this would end up deleting the whole database
-    _.type userId, 'string'
-    comments_.bySubjectAndUserId 'item', userId
-    .then db.bulkDelete
