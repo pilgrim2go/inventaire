@@ -46,7 +46,7 @@ describe 'tasks:bySuspectUri', ->
     createSomeTasks 'Gilbert Simondon'
     .then (res)-> getBySuspectUri res.humans[0].uri
     .then (tasks)->
-      suspectUris = _.pluck tasks, 'suspectUri'
+      suspectUris = _.map tasks, 'suspectUri'
       suspectUris.should.be.an.Array()
       _.uniq(suspectUris).length.should.equal 1
       done()

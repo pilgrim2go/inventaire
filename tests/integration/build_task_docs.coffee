@@ -26,7 +26,7 @@ describe 'create tasks doc based on inv entity object', ->
   it 'should return an array of tasks with the same suspectUri', (done)->
     buildTaskDocs suspectEntity
     .then (taskDocs)->
-      tasksSuspectUris = _.pluck taskDocs, 'suspectUri'
+      tasksSuspectUris = _.map taskDocs, 'suspectUri'
       _.uniq(tasksSuspectUris).length.should.equal 1
 
       firstSupectUri = taskDocs[0].suspectUri
@@ -39,7 +39,7 @@ describe 'create tasks doc based on inv entity object', ->
   it 'should return a relationScore for every tasks', (done)->
     buildTaskDocs suspectEntity
     .then (taskDocs)->
-      taskRelationScores = _.pluck taskDocs, 'relationScore'
+      taskRelationScores = _.map taskDocs, 'relationScore'
       _.compact(taskRelationScores).length.should.equal taskRelationScores.length
 
       done()
@@ -49,7 +49,7 @@ describe 'create tasks doc based on inv entity object', ->
   it 'should return if task has encyclopedia occurence for every tasks', (done)->
     buildTaskDocs suspectEntity
     .then (taskDocs)->
-      taskEncyclopedia = _.pluck taskDocs, 'hasEncyclopediaOccurence'
+      taskEncyclopedia = _.map taskDocs, 'hasEncyclopediaOccurence'
       _.without(taskEncyclopedia, true, false).should.deepEqual []
 
       done()
